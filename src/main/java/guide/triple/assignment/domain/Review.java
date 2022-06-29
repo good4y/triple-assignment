@@ -21,7 +21,7 @@ public class Review {
   @GeneratedValue(generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
   @Column(columnDefinition = "VARCHAR(36)")
-  String id;
+  String reviewId;
   @Column(columnDefinition = "VARCHAR(36)")
   String userId;
   @Column(columnDefinition = "VARCHAR(36)")
@@ -45,7 +45,7 @@ public class Review {
 
   @Builder
   public Review(
-      String id,
+      String reviewId,
       String userId,
       String placeId,
       List<String> attachedPhotoIds,
@@ -53,7 +53,7 @@ public class Review {
       EAction action,
       String content
   ) {
-    this.id = id;
+    this.reviewId = reviewId;
     this.userId = userId;
     this.placeId = placeId;
     this.attachedPhotoIds = attachedPhotoIds;
