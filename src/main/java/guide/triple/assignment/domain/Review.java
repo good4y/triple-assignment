@@ -30,10 +30,10 @@ public class Review {
   @Column
   @Convert(converter = AttachedPhotoIdsConverter.class)
   List<UUID> attachedPhotoIds;
-  @Column(columnDefinition = "VARCHAR(12)")
+  @Column(columnDefinition = "VARCHAR(20)")
   @Enumerated(EnumType.STRING)
   EType type;
-  @Column(columnDefinition = "VARCHAR(10)")
+  @Column(columnDefinition = "VARCHAR(12)")
   @Enumerated(EnumType.STRING)
   EAction action;
   @Column
