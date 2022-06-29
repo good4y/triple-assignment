@@ -2,6 +2,7 @@ package guide.triple.assignment.domain;
 
 import guide.triple.assignment.util.AttachedPhotoIdsConverter;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -20,24 +21,23 @@ public class Review {
   @Id
   @GeneratedValue(generator = "uuid2")
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
-  @Column(columnDefinition = "VARCHAR(36)")
-  String reviewId;
-  @Column(columnDefinition = "VARCHAR(36)")
-  String userId;
-  @Column(columnDefinition = "VARCHAR(36)")
-  String placeId;
+  @Column(columnDefinition = "BINARY(16)")
+  UUID reviewId;
+  @Column(columnDefinition = "BINARY(16)")
+  UUID userId;
+  @Column(columnDefinition = "BINARY(16)")
+  UUID placeId;
   @Column
   @Convert(converter = AttachedPhotoIdsConverter.class)
-  List<String> attachedPhotoIds;
-  @Column
+  List<UUID> attachedPhotoIds;
+  @Column(columnDefinition = "VARCHAR(12)")
   @Enumerated(EnumType.STRING)
   EType type;
-  @Column
+  @Column(columnDefinition = "VARCHAR(10)")
   @Enumerated(EnumType.STRING)
   EAction action;
   @Column
   String content;
-
 
   public Review() {
 
@@ -45,10 +45,10 @@ public class Review {
 
   @Builder
   public Review(
-      String reviewId,
-      String userId,
-      String placeId,
-      List<String> attachedPhotoIds,
+      UUID reviewId,
+      UUID userId,
+      UUID placeId,
+      List<UUID> attachedPhotoIds,
       EType type,
       EAction action,
       String content

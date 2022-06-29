@@ -4,8 +4,11 @@ import guide.triple.assignment.config.QueryTestConfig;
 import guide.triple.assignment.domain.EAction;
 import guide.triple.assignment.domain.EType;
 import guide.triple.assignment.domain.Review;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,17 +26,14 @@ public class ReviewTest {
   @Test
   @DisplayName("리뷰 저장 테스트")
   public void saveReview() {
-    List<String> photos = Arrays.asList(
-        "da19ece1-0872-408f-9174-02294da514a1"
-        , "da19ece1-0872-408f-9174-02294da514a2"
-        , "da19ece1-0872-408f-9174-02294da514a3"
-        , "da19ece1-0872-408f-9174-02294da514a4"
-        , "da19ece1-0872-408f-9174-02294da514a5"
-    );
+    UUID userID = UUID.randomUUID();
+    UUID placeID = UUID.randomUUID();
+
+    List<UUID> photos = Arrays.asList(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
 
     Review firstReview = Review.builder()
-        .userId("bcad28a3-d99f-4d42-865f-d34b0e432cea")
-        .placeId("72d970ae-6886-4433-8510-53fb6490c7f6")
+        .userId(userID)
+        .placeId(placeID)
         .attachedPhotoIds(photos)
         .type(EType.REVIEW)
         .action(EAction.ADD)
