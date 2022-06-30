@@ -35,11 +35,8 @@ public class Point {
   @Column(columnDefinition = "VARCHAR(10)")
   EAction action;
 
-  @Column(columnDefinition = "VARCHAR(20)")
-  EType type;
-
-  @Column
-  Boolean isPlus;
+  @Column(columnDefinition = "SMALLINT")
+  Integer pointChange;
 
   @CreationTimestamp
   LocalDateTime createdTime;
@@ -55,8 +52,7 @@ public class Point {
       UUID reviewId,
       UUID placeId,
       EAction action,
-      EType type,
-      Boolean isPlus,
+      Integer pointChange,
       LocalDateTime createdTime
   ){
     this.pointId = pointId;
@@ -64,8 +60,7 @@ public class Point {
     this.reviewId = reviewId;
     this.placeId = placeId;
     this.action = action;
-    this.type = type;
-    this.isPlus = isPlus;
+    this.pointChange = pointChange;
     this.createdTime = createdTime;
   }
 }

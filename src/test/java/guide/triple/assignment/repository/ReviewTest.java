@@ -1,7 +1,6 @@
 package guide.triple.assignment.repository;
 
 import guide.triple.assignment.domain.EAction;
-import guide.triple.assignment.domain.EType;
 import guide.triple.assignment.domain.Review;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +29,6 @@ public class ReviewTest {
         .userId(userID)
         .placeId(placeID)
         .attachedPhotoIds(photos)
-        .type(EType.REVIEW)
         .action(EAction.ADD)
         .content("첫 리뷰")
         .build();

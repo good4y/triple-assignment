@@ -23,20 +23,22 @@ public class Review {
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
   @Column(columnDefinition = "BINARY(16)")
   UUID reviewId;
+
   @Column(columnDefinition = "BINARY(16)")
   UUID userId;
+
   @Column(columnDefinition = "BINARY(16)")
   UUID placeId;
-  @Column
+
+  @Column(columnDefinition = "VARCHAR(255)")
   @Convert(converter = AttachedPhotoIdsConverter.class)
   List<UUID> attachedPhotoIds;
-  @Column(columnDefinition = "VARCHAR(20)")
-  @Enumerated(EnumType.STRING)
-  EType type;
-  @Column(columnDefinition = "VARCHAR(12)")
+
+  @Column(columnDefinition = "VARCHAR(10)")
   @Enumerated(EnumType.STRING)
   EAction action;
-  @Column
+
+  @Column(columnDefinition = "VARCHAR(255)")
   String content;
 
   public Review() {
@@ -49,7 +51,6 @@ public class Review {
       UUID userId,
       UUID placeId,
       List<UUID> attachedPhotoIds,
-      EType type,
       EAction action,
       String content
   ) {
@@ -57,7 +58,6 @@ public class Review {
     this.userId = userId;
     this.placeId = placeId;
     this.attachedPhotoIds = attachedPhotoIds;
-    this.type = type;
     this.action = action;
     this.content = content;
   }
