@@ -3,8 +3,11 @@ package guide.triple.assignment.domain;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import lombok.Builder;
@@ -23,6 +26,7 @@ public class Point {
   @GenericGenerator(name = "uuid2", strategy = "uuid2")
   @Column(columnDefinition = "BINARY(16)")
   UUID pointId;
+
   @Column(columnDefinition = "BINARY(16)")
   UUID userID;
 
@@ -33,10 +37,14 @@ public class Point {
   UUID placeId;
 
   @Column(columnDefinition = "VARCHAR(10)")
+  @Enumerated(EnumType.STRING)
   EAction action;
 
   @Column(columnDefinition = "SMALLINT")
   Integer pointChange;
+
+  @Column(columnDefinition = "BOOLEAN")
+  Boolean isFirst;
 
   @CreationTimestamp
   LocalDateTime createdTime;
@@ -53,6 +61,7 @@ public class Point {
       UUID placeId,
       EAction action,
       Integer pointChange,
+      Boolean isFirst,
       LocalDateTime createdTime
   ){
     this.pointId = pointId;
@@ -61,6 +70,7 @@ public class Point {
     this.placeId = placeId;
     this.action = action;
     this.pointChange = pointChange;
+    this.isFirst = isFirst;
     this.createdTime = createdTime;
   }
 }
