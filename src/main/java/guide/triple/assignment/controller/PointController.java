@@ -1,0 +1,27 @@
+package guide.triple.assignment.controller;
+
+import guide.triple.assignment.domain.EAction;
+import guide.triple.assignment.dto.PointEventRequestDto;
+import guide.triple.assignment.service.PointEventService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+public class PointController {
+
+  private final PointEventService pointEventService;
+
+  @PostMapping(path = "/event")
+  public ResponseEntity pointEvent(PointEventRequestDto dto) {
+    if (dto.getAction().equals(EAction.ADD)) {
+      return pointEventService.addReview(dto);
+    } else if (dto.getAction().equals(EAction.MOD)) {
+      return pointEventService.modReview(dto);
+    } else {
+      return pointEventService.deleteReview(dto);
+    }
+  }
+}
