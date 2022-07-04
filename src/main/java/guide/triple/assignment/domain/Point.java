@@ -29,13 +29,13 @@ public class Point {
   UUID pointId;
 
   @Column(columnDefinition = "BINARY(16)")
-  byte[] userID;
+  UUID userID;
 
   @Column(columnDefinition = "BINARY(16)")
-  byte[] reviewId;
+  UUID reviewId;
 
   @Column(columnDefinition = "BINARY(16)")
-  byte[] placeId;
+  UUID placeId;
 
   @Column(columnDefinition = "VARCHAR(10)")
   @Enumerated(EnumType.STRING)
@@ -57,9 +57,9 @@ public class Point {
   @Builder
   public Point(
       UUID pointId,
-      byte[] userId,
-      byte[] reviewId,
-      byte[] placeId,
+      UUID userId,
+      UUID reviewId,
+      UUID placeId,
       EAction action,
       Integer pointChange,
       Boolean isFirst,
@@ -78,11 +78,11 @@ public class Point {
   public static Point of(PointEventRequestDto dto, Integer point) {
     return Point.builder()
         .isFirst(point > 0)
-        .reviewId(UuidConverter.StringToByte(dto.getReviewId()))
+        .reviewId(UUID.fromString(dto.getReviewId()))
         .action(dto.getAction())
         .pointChange(point)
-        .placeId(UuidConverter.StringToByte(dto.getPlaceId()))
-        .userId(UuidConverter.StringToByte(dto.getUserId()))
+        .placeId(UUID.fromString(dto.getPlaceId()))
+        .userId(UUID.fromString(dto.getUserId()))
         .build();
   }
 }

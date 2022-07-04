@@ -1,5 +1,6 @@
 package guide.triple.assignment.domain;
 
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,7 +15,7 @@ public class User {
 
   @Id
   @Column(columnDefinition = "BINARY(16)", name = "user_id")
-  byte[] userId;
+  UUID userId;
 
   @Column(columnDefinition = "SMALLINT")
   Integer totalPoint;
@@ -25,7 +26,7 @@ public class User {
 
   @Builder
   public User(
-      byte[] userId,
+      UUID userId,
       Integer totalPoint
   ){
     this.userId = userId;

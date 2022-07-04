@@ -4,6 +4,7 @@ import guide.triple.assignment.dto.PointEventRequestDto;
 import guide.triple.assignment.util.AttachedPhotoIdsConverter;
 import guide.triple.assignment.util.UuidConverter;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -19,13 +20,13 @@ public class Review {
 
   @Id
   @Column(columnDefinition = "BINARY(16)")
-  byte[] reviewId;
+  UUID reviewId;
 
   @Column(columnDefinition = "BINARY(16)")
-  byte[] userId;
+  UUID userId;
 
   @Column(columnDefinition = "BINARY(16)")
-  byte[] placeId;
+  UUID placeId;
 
   @Column(columnDefinition = "VARCHAR(255)")
   @Convert(converter = AttachedPhotoIdsConverter.class)
@@ -40,9 +41,9 @@ public class Review {
 
   @Builder
   public Review(
-      byte[] reviewId,
-      byte[] userId,
-      byte[] placeId,
+      UUID reviewId,
+      UUID userId,
+      UUID placeId,
       List<String> attachedPhotoIds,
       String content
   ) {
@@ -55,11 +56,11 @@ public class Review {
 
   public static Review of (PointEventRequestDto dto) {
     return Review.builder()
-        .reviewId(UuidConverter.StringToByte(dto.getReviewId()))
+        .reviewId(UUID.fromString(dto.getReviewId()))
         .content(dto.getContent())
-        .placeId(UuidConverter.StringToByte(dto.getPlaceId()))
+        .placeId(UUID.fromString(dto.getPlaceId()))
         .attachedPhotoIds(dto.getAttachedPhotoIds())
-        .userId(UuidConverter.StringToByte(dto.getPlaceId()))
+        .userId(UUID.fromString(dto.getUserId()))
         .build();
   }
 

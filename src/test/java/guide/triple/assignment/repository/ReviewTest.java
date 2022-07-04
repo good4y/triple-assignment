@@ -20,10 +20,9 @@ public class ReviewTest {
   @Test
   @DisplayName("리뷰 저장/삭제 테스트")
   public void saveReview() {
-    byte[] userId = UuidConverter.StringToByte("3ede0ef2-92b7-4817-a5f3-0c575361f745");
-    byte[] placeId = UuidConverter.StringToByte("2e4baf1c-5acb-4efb-a1af-eddada31b00f");
-    byte[] reviewId = UuidConverter.StringToByte("240a0658-dc5f-4878-9381-ebb7b2667772");
-
+    UUID userId = UUID.fromString("3ede0ef2-92b7-4817-a5f3-0c575361f745");
+    UUID reviewId = UUID.fromString("240a0658-dc5f-4878-9381-ebb7b2667772");
+    UUID placeId = UUID.fromString("2e4baf1c-5acb-4efb-a1af-eddada31b00f");
     List<String> photos = Arrays.asList(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString());
 
     Review firstReview = Review.builder()
