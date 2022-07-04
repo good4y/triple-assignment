@@ -68,8 +68,98 @@ public class PointEventService {
   }
 
   @Transactional
-  public void modReview(PointEventRequestDto pointEventRequestDto) {
+  public ResponseEntity<Object> modReview(PointEventRequestDto pointEventRequestDto) {
+    UUID userId = UUID.fromString(pointEventRequestDto.getUserId());
+    UUID placeId = UUID.fromString(pointEventRequestDto.getPlaceId());
+    UUID reviewId = UUID.fromString(pointEventRequestDto.getReviewId());
+    Review review = reviewRepository.findById(reviewId).orElseThrow(NullPointerException::new);
 
+    int addPoint = 0;
+    if(review.getAttachedPhotoIds()==null && pointEventRequestDto.getAttachedPhotoIds() != null){
+      addPoint += 1;
+    }else if(review.getAttachedPhotoIds()!=null && pointEventRequestDto.getAttachedPhotoIds() == null){
+      addPoint -= 1;
+    }else if(review.getContent() == null && pointEventRequestDto.getContent() != null){
+      addPoint += 1;
+    }
+    else if(review.getContent() != null && pointEventRequestDto.getContent() == null){
+      addPoint -= 1;
+    }
+
+    User user = userRepository.findById(userId).orElseThrow(NullPointerException::new);
+
+    user = User.builder()
+        .userId(userId)
+        .totalPoint(user.getTotalPoint() + addPoint)
+        .build();
+
+    Point newPoint = Point.builder()
+        .pointChange(addPoint)
+        .reviewId(reviewId)
+        .action(pointEventRequestDto.getAction())
+        .placeId(placeId)
+        .isFirst(false)
+        .userId(userId)
+        .build();
+    Review modReview = Review.of(pointEventRequestDto);
+    reviewRepository.save(modReview);
+    userRepository.save(user);
+    pointRepository.save(newPoint);
+
+    return ResponseEntity.ok().build();
+  }
+
+  @Transactional
+  public ResponseEntity<Object> deleteReview(PointEventRequestDto pointEventRequestDto){
+    UUID userId = UUID.fromString(pointEventRequestDto.getUserId());
+    UUID placeId = UUID.fromString(pointEventRequestDto.getPlaceId());
+    UUID reviewId = UUID.fromString(pointEventRequestDto.getReviewId());
+
+    Review review = reviewRepository.findById(reviewId).orElseThrow(NullPointerException::new);
+
+    if(reviewRepository.existsById(reviewId)){
+      reviewRepository.deleteById(reviewId);
+    }else {
+      return ResponseEntity.badRequest().build();
+    }
+
+    int addPoint = 0;
+    boolean isFirst = false;
+
+    Point point = pointRepository.findByPlaceIdAndIsFirst(placeId, true).orElseThrow(NullPointerException::new);
+
+    // 첫 리뷰 확인
+    if(point.getUserID() == userId){
+      addPoint -= 1;
+      isFirst = true;
+    }
+    if(review.getContent() != null){
+      addPoint -= 1;
+    }
+    if(review.getPlaceId() != null){
+      addPoint -= 1;
+    }
+
+    User user = userRepository.findById(userId).orElseThrow(NullPointerException::new);
+
+    user = User.builder()
+        .userId(userId)
+        .totalPoint(user.getTotalPoint() + addPoint)
+        .build();
+
+    Point newPoint = Point.builder()
+        .pointChange(addPoint)
+        .reviewId(reviewId)
+        .action(pointEventRequestDto.getAction())
+        .placeId(placeId)
+        .isFirst(isFirst)
+        .userId(userId)
+        .build();
+
+    userRepository.save(user);
+    pointRepository.save(newPoint);
+
+    return ResponseEntity.ok().build();
   }
 
   private int sumPoint(PointEventRequestDto dto) {
@@ -84,11 +174,4 @@ public class PointEventService {
     }
     return addPoint;
   }
-
-//  private int subtractPoint(EAction action) {
-//    if (action.equals(EAction.DELETE)) {
-
-//    }
-//    return 0;
-//  }
 }

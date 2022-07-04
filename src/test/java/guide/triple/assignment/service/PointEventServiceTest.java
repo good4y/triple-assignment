@@ -59,7 +59,7 @@ public class PointEventServiceTest {
   @Test
   @Order(300)
   @DisplayName("포인트 적립 성공, 사진 x, 첫 글 x")
-  public void addReviewNoPicAndNotFirst(){
+  public void addReviewNoPhotoAndNotFirst(){
 
     PointEventRequestDto requestDto = PointEventRequestDto.builder()
         .type("REVIEW")
@@ -93,6 +93,70 @@ public class PointEventServiceTest {
     Assertions.assertThrows(NullPointerException.class, () -> pointEventService.addReview(requestDto));
   }
 
+  @Test
+  @Order(400)
+  @DisplayName("리뷰 수정 성공, 사진 삭제")
+  public void modReviewDeletePhoto (){
+    PointEventRequestDto requestDto = PointEventRequestDto.builder()
+        .type("REVIEW")
+        .action(EAction.MOD)
+        .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+        .content("좋아요!")
+        .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+        .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+        .build();
+    pointEventService.modReview(requestDto);
+    User user = userRepository.findById(UUID.fromString(requestDto.getUserId())).orElse(null);
+    Assertions.assertEquals(2, user.getTotalPoint());
+  }
+  @Test
+  @Order(500)
+  @DisplayName("리뷰 수정 성공, 리뷰 내용 수정")
+  public void modReviewModifyContent (){
+    PointEventRequestDto requestDto = PointEventRequestDto.builder()
+        .type("REVIEW")
+        .action(EAction.MOD)
+        .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+        .content("안좋아요!")
+        .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+        .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+        .build();
+    pointEventService.modReview(requestDto);
+    User user = userRepository.findById(UUID.fromString(requestDto.getUserId())).orElse(null);
+    Assertions.assertEquals(2, user.getTotalPoint());
+  }
+  @Test
+  @Order(600)
+  @DisplayName("리뷰 수정 성공, 리뷰 내용 삭제")
+  public void modReviewDeleteContent(){
+    PointEventRequestDto requestDto = PointEventRequestDto.builder()
+        .type("REVIEW")
+        .action(EAction.MOD)
+        .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+        .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+        .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+        .build();
+    pointEventService.modReview(requestDto);
+    User user = userRepository.findById(UUID.fromString(requestDto.getUserId())).orElse(null);
+    Assertions.assertEquals(1, user.getTotalPoint());
+  }
+  @Test
+  @Order(700)
+  @DisplayName("리뷰 삭제 성공")
+  public void deleteReview (){
+    PointEventRequestDto requestDto = PointEventRequestDto.builder()
+        .type("REVIEW")
+        .action(EAction.DELETE)
+        .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+        .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+        .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+        .build();
+
+    pointEventService.deleteReview(requestDto);
+    User user = userRepository.findById(UUID.fromString(requestDto.getUserId())).orElse(null);
+    Assertions.assertEquals(0, user.getTotalPoint());
+  }
+
   private PointEventRequestDto requestDto() {
     List<String> photos = List.of("e4d1a64e-a531-46de-88d0-ff0ed70c0bb8", "afb0cef2-851d-4a50-bb07-9cc15cbdc332");
 
@@ -106,5 +170,4 @@ public class PointEventServiceTest {
         .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
         .build();
   }
-
 }
