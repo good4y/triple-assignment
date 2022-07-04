@@ -1,29 +1,24 @@
 package guide.triple.assignment.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
-public class AttachedPhotoIdsConverter implements AttributeConverter<List<UUID>, String> {
+@Converter
+public class AttachedPhotoIdsConverter implements AttributeConverter<List<String>, String> {
 
   @Override
-  public String convertToDatabaseColumn(List<UUID> attribute) {
+  public String convertToDatabaseColumn(List<String> attribute) {
     StringBuilder photoIds = new StringBuilder();
 
     attribute.forEach(p -> photoIds.append(p).append(";"));
-
     return photoIds.toString();
   }
 
   @Override
-  public List<UUID> convertToEntityAttribute(String dbData) {
-    List<String> photoIds = Arrays.asList(dbData.split(";"));
-    List<UUID> photoUUID = new ArrayList<>();
+  public List<String> convertToEntityAttribute(String dbData) {
 
-    photoIds.forEach(p -> photoUUID.add(UUID.fromString(p)));
-
-    return photoUUID;
+    return Arrays.asList(dbData.split(";"));
   }
 }
