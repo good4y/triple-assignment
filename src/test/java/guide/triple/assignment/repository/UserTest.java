@@ -10,26 +10,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class UserTest {
+
   @Autowired
-  private UsersRepository usersRepository;
+  private UserRepository userRepository;
 
   @Test
   @DisplayName("유저 저장 테스트")
   public void saveUser() {
     UUID userId = UUID.fromString("3ede0ef2-92b7-4817-a5f3-0c575361f745");
-
     User firstReview = User.builder()
         .userId(userId)
         .totalPoint(100)
         .build();
 
-    usersRepository.save(firstReview);
+    userRepository.save(firstReview);
 
-    User resultUser = usersRepository.findAll().get(0);
+    User resultUser = userRepository.findAll().get(0);
 
     Assertions.assertEquals(resultUser.getTotalPoint(), 100);
-    Assertions.assertEquals(resultUser.getUserId(), userId);
 
-    usersRepository.deleteById(userId);
+    userRepository.deleteById(userId);
   }
 }

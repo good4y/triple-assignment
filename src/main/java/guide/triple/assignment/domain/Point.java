@@ -1,9 +1,10 @@
 package guide.triple.assignment.domain;
 
+import guide.triple.assignment.dto.PointEventRequestDto;
+import guide.triple.assignment.util.UuidConverter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
@@ -40,7 +41,7 @@ public class Point {
   @Enumerated(EnumType.STRING)
   EAction action;
 
-  @Column(columnDefinition = "SMALLINT")
+  @Column(columnDefinition = "TINYINT")
   Integer pointChange;
 
   @Column(columnDefinition = "BOOLEAN")
@@ -49,7 +50,7 @@ public class Point {
   @CreationTimestamp
   LocalDateTime createdTime;
 
-  public Point(){
+  public Point() {
 
   }
 
@@ -63,7 +64,7 @@ public class Point {
       Integer pointChange,
       Boolean isFirst,
       LocalDateTime createdTime
-  ){
+  ) {
     this.pointId = pointId;
     this.userID = userId;
     this.reviewId = reviewId;
@@ -72,6 +73,17 @@ public class Point {
     this.pointChange = pointChange;
     this.isFirst = isFirst;
     this.createdTime = createdTime;
+  }
+
+  public static Point of(PointEventRequestDto dto, Integer point) {
+    return Point.builder()
+        .isFirst(point > 0)
+        .reviewId(UUID.fromString(dto.getReviewId()))
+        .action(dto.getAction())
+        .pointChange(point)
+        .placeId(UUID.fromString(dto.getPlaceId()))
+        .userId(UUID.fromString(dto.getUserId()))
+        .build();
   }
 }
 
