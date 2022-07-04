@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,7 +20,7 @@ public class PointController {
   private final InquirePointService inquirePointService;
 
   @PostMapping(path = "/event")
-  public ResponseEntity<Object> pointEvent(PointEventRequestDto dto) {
+  public ResponseEntity<Object> pointEvent(@RequestBody PointEventRequestDto dto) {
     if (dto.getAction().equals(EAction.ADD)) {
       return pointEventService.addReview(dto);
     } else if (dto.getAction().equals(EAction.MOD)) {
