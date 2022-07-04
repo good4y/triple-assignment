@@ -1,18 +1,22 @@
-server:
-  port: 8090
-  error:
-    include-binding-errors: always
-    include-message: always
-
 spring:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema_test.sql
+      data-locations: classpath:data_test.sql
   datasource:
-    url: jdbc:h2:mem:assignment;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=USER
+    url: jdbc:h2:mem:assignment;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=USER;
     driver-class-name: org.h2.Driver
     username: sa
     password:
   jpa:
-    hibernate:
-      ddl-auto: create
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
     properties:
       hibernate:
+    hibernate:
+      ddl-auto: none
+    defer-datasource-initialization: true
+
+
+

@@ -14,7 +14,7 @@ import lombok.Getter;
 public class User {
 
   @Id
-  @Column(columnDefinition = "BINARY(16)", name = "user_id")
+  @Column(columnDefinition = "BINARY(16)")
   UUID userId;
 
   @Column(columnDefinition = "SMALLINT")

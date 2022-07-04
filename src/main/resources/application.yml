@@ -1,9 +1,3 @@
-server:
-  port: 8090
-  error:
-    include-binding-errors: always
-    include-message: always
-
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/triple
@@ -11,8 +5,12 @@ spring:
     username: root
     password: root
   jpa:
-    hibernate:
-      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
