@@ -10,15 +10,21 @@ public class AttachedPhotoIdsConverter implements AttributeConverter<List<String
 
   @Override
   public String convertToDatabaseColumn(List<String> attribute) {
-    StringBuilder photoIds = new StringBuilder();
+    if (attribute != null) {
+      StringBuilder photoIds = new StringBuilder();
 
-    attribute.forEach(p -> photoIds.append(p).append(";"));
-    return photoIds.toString();
+      attribute.forEach(p -> photoIds.append(p).append(";"));
+      return photoIds.toString();
+    }
+    return null;
   }
 
   @Override
   public List<String> convertToEntityAttribute(String dbData) {
-
-    return Arrays.asList(dbData.split(";"));
+    if (dbData != null) {
+      return Arrays.asList(dbData.split(";"));
+    } else {
+      return null;
+    }
   }
 }
