@@ -1,7 +1,6 @@
 package guide.triple.assignment.domain;
 
 import guide.triple.assignment.dto.PointEventRequestDto;
-import guide.triple.assignment.util.UuidConverter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -79,7 +78,7 @@ public class Point {
     return Point.builder()
         .isFirst(point > 0)
         .reviewId(UUID.fromString(dto.getReviewId()))
-        .action(dto.getAction())
+        .action(EAction.valueOf(dto.getAction()))
         .pointChange(point)
         .placeId(UUID.fromString(dto.getPlaceId()))
         .userId(UUID.fromString(dto.getUserId()))

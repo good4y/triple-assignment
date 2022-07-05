@@ -1,6 +1,5 @@
 package guide.triple.assignment.service;
 
-import guide.triple.assignment.domain.EAction;
 import guide.triple.assignment.domain.User;
 import guide.triple.assignment.dto.PointEventRequestDto;
 import guide.triple.assignment.repository.PointRepository;
@@ -8,6 +7,7 @@ import guide.triple.assignment.repository.ReviewRepository;
 import guide.triple.assignment.repository.UserRepository;
 import java.util.List;
 import java.util.UUID;
+import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -42,7 +42,7 @@ public class PointEventServiceTest {
     PointEventRequestDto requestDto = requestDto();
     UUID userId = UUID.fromString(requestDto.getUserId());
     pointEventService.addReview(requestDto);
-    User user = userRepository.findById(userId).orElseThrow(NullPointerException::new);
+    User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
 
     Assertions.assertEquals(3, user.getTotalPoint());
   }
@@ -63,7 +63,7 @@ public class PointEventServiceTest {
 
     PointEventRequestDto requestDto = PointEventRequestDto.builder()
         .type("REVIEW")
-        .action(EAction.ADD)
+        .action("ADD")
         .reviewId("240a0658-dc5f-4878-9381-ebb7b2661111")
         .content("좋아요!")
         .userId("3e5e1e32-92b7-4817-a5f3-0c575361f745")
@@ -71,7 +71,7 @@ public class PointEventServiceTest {
         .build();
     UUID userId = UUID.fromString(requestDto.getUserId());
     pointEventService.addReview(requestDto);
-    User user = userRepository.findById(userId).orElseThrow(NullPointerException::new);
+    User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
     Assertions.assertEquals(1, user.getTotalPoint());
   }
 
@@ -82,7 +82,7 @@ public class PointEventServiceTest {
 
     PointEventRequestDto requestDto = PointEventRequestDto.builder()
         .type("REVIEW")
-        .action(EAction.ADD)
+        .action("ADD")
         .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
         .content("좋아요!")
         .attachedPhotoIds(photos)
@@ -90,7 +90,7 @@ public class PointEventServiceTest {
         .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
         .build();
 
-    Assertions.assertThrows(NullPointerException.class, () -> pointEventService.addReview(requestDto));
+    Assertions.assertThrows(EntityNotFoundException.class, () -> pointEventService.addReview(requestDto));
   }
 
   @Test
@@ -99,7 +99,7 @@ public class PointEventServiceTest {
   public void modReviewDeletePhoto (){
     PointEventRequestDto requestDto = PointEventRequestDto.builder()
         .type("REVIEW")
-        .action(EAction.MOD)
+        .action("MOD")
         .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
         .content("좋아요!")
         .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
@@ -115,7 +115,7 @@ public class PointEventServiceTest {
   public void modReviewModifyContent (){
     PointEventRequestDto requestDto = PointEventRequestDto.builder()
         .type("REVIEW")
-        .action(EAction.MOD)
+        .action("MOD")
         .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
         .content("안좋아요!")
         .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
@@ -131,7 +131,7 @@ public class PointEventServiceTest {
   public void modReviewDeleteContent(){
     PointEventRequestDto requestDto = PointEventRequestDto.builder()
         .type("REVIEW")
-        .action(EAction.MOD)
+        .action("MOD")
         .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
         .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
         .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
@@ -146,7 +146,7 @@ public class PointEventServiceTest {
   public void deleteReview (){
     PointEventRequestDto requestDto = PointEventRequestDto.builder()
         .type("REVIEW")
-        .action(EAction.DELETE)
+        .action("DELETE")
         .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
         .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
         .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
@@ -162,7 +162,7 @@ public class PointEventServiceTest {
 
     return PointEventRequestDto.builder()
         .type("REVIEW")
-        .action(EAction.ADD)
+        .action("ADD")
         .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
         .content("좋아요!")
         .attachedPhotoIds(photos)

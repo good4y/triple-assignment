@@ -30,13 +30,13 @@ public class PointEventService {
     UUID reviewId = UUID.fromString(pointEventRequestDto.getReviewId());
     boolean isFirst;
 
-    User user = userRepository.findById(userId).orElseThrow(NullPointerException::new);
+    User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
     Review newReview = Review.of(pointEventRequestDto);
 
     int addPoint = sumPoint(pointEventRequestDto);
 
     if (reviewRepository.existsByPlaceIdAndUserId(placeId, userId)) {
-      return ResponseEntity.badRequest().build();
+      return ResponseEntity.badRequest().body("중복된 ADD 요청");
     }
     else if(reviewRepository.existsByPlaceId(placeId)){
       isFirst = false;
@@ -55,7 +55,7 @@ public class PointEventService {
         .pointChange(addPoint)
         .reviewId(reviewId)
         .isFirst(isFirst)
-        .action(pointEventRequestDto.getAction())
+        .action(EAction.valueOf(pointEventRequestDto.getAction()))
         .placeId(placeId)
         .userId(userId)
         .build();
@@ -72,9 +72,10 @@ public class PointEventService {
     UUID userId = UUID.fromString(pointEventRequestDto.getUserId());
     UUID placeId = UUID.fromString(pointEventRequestDto.getPlaceId());
     UUID reviewId = UUID.fromString(pointEventRequestDto.getReviewId());
-    Review review = reviewRepository.findById(reviewId).orElseThrow(NullPointerException::new);
+    Review review = reviewRepository.findById(reviewId).orElseThrow(()->new EntityNotFoundException("리뷰가 없습니다."));
 
     int addPoint = 0;
+
     if(review.getAttachedPhotoIds()==null && pointEventRequestDto.getAttachedPhotoIds() != null){
       addPoint += 1;
     }else if(review.getAttachedPhotoIds()!=null && pointEventRequestDto.getAttachedPhotoIds() == null){
@@ -86,7 +87,7 @@ public class PointEventService {
       addPoint -= 1;
     }
 
-    User user = userRepository.findById(userId).orElseThrow(NullPointerException::new);
+    User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
 
     user = User.builder()
         .userId(userId)
@@ -96,17 +97,22 @@ public class PointEventService {
     Point newPoint = Point.builder()
         .pointChange(addPoint)
         .reviewId(reviewId)
-        .action(pointEventRequestDto.getAction())
+        .action(EAction.valueOf(pointEventRequestDto.getAction()))
         .placeId(placeId)
         .isFirst(false)
         .userId(userId)
         .build();
+
     Review modReview = Review.of(pointEventRequestDto);
     reviewRepository.save(modReview);
     userRepository.save(user);
+
+    if(newPoint.getPointChange() == 0) {
+      return ResponseEntity.ok().body("점수 변동 없음");
+    }
     pointRepository.save(newPoint);
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok().body(newPoint);
   }
 
   @Transactional
@@ -115,7 +121,7 @@ public class PointEventService {
     UUID placeId = UUID.fromString(pointEventRequestDto.getPlaceId());
     UUID reviewId = UUID.fromString(pointEventRequestDto.getReviewId());
 
-    Review review = reviewRepository.findById(reviewId).orElseThrow(NullPointerException::new);
+    Review review = reviewRepository.findById(reviewId).orElseThrow(()->new EntityNotFoundException("리뷰가 없습니다."));
 
     if(reviewRepository.existsById(reviewId)){
       reviewRepository.deleteById(reviewId);
@@ -126,7 +132,7 @@ public class PointEventService {
     int addPoint = 0;
     boolean isFirst = false;
 
-    Point point = pointRepository.findByPlaceIdAndIsFirst(placeId, true).orElseThrow(NullPointerException::new);
+    Point point = pointRepository.findByPlaceIdAndIsFirst(placeId, true).orElseThrow(EntityNotFoundException::new);
 
     // 첫 리뷰 확인
     if(point.getUserID() == userId){
@@ -140,7 +146,7 @@ public class PointEventService {
       addPoint -= 1;
     }
 
-    User user = userRepository.findById(userId).orElseThrow(NullPointerException::new);
+    User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
 
     user = User.builder()
         .userId(userId)
@@ -150,7 +156,7 @@ public class PointEventService {
     Point newPoint = Point.builder()
         .pointChange(addPoint)
         .reviewId(reviewId)
-        .action(pointEventRequestDto.getAction())
+        .action(EAction.valueOf(pointEventRequestDto.getAction()))
         .placeId(placeId)
         .isFirst(isFirst)
         .userId(userId)
@@ -164,7 +170,7 @@ public class PointEventService {
 
   private int sumPoint(PointEventRequestDto dto) {
     int addPoint = 0;
-    if (dto.getAction().equals(EAction.ADD)) {
+    if (dto.getAction().equals("ADD")) {
       if(!dto.getContent().isEmpty()){
         addPoint += 1;
       }
