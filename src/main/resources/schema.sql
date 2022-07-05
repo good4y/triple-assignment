@@ -1,12 +1,12 @@
-drop table if exists "user" cascade;
+drop table if exists user cascade;
 drop table if exists point cascade;
 drop table if exists review cascade;
 
-create table "user"
+create table user
 (
     user_id     binary(16)         not null
         primary key,
-    total_point smallint default 0 not null
+    total_point  smallint unsigned default 0 not null
 );
 
 create table review
