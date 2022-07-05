@@ -21,9 +21,9 @@ public class PointController {
 
   @PostMapping(path = "/event")
   public ResponseEntity<Object> pointEvent(@RequestBody PointEventRequestDto dto) {
-    if (dto.getAction().equals(EAction.ADD)) {
+    if (dto.getAction().equals(EAction.ADD.toString())) {
       return pointEventService.addReview(dto);
-    } else if (dto.getAction().equals(EAction.MOD)) {
+    } else if (dto.getAction().equals(EAction.MOD.toString())) {
       return pointEventService.modReview(dto);
     } else {
       return pointEventService.deleteReview(dto);
